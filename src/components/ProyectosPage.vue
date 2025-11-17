@@ -2,7 +2,11 @@
   <div class="proyectos-container">
     <h1>Gestión de Proyectos</h1>
 
-    <AgregarProyecto @agregar="agregarProyecto" />
+    <!-- Escuchamos ambos eventos: agregar (si existe) y newProyecto (si existe) -->
+    <AgregarProyecto 
+      @agregar="agregarProyecto"
+      @newProyecto="agregarProyecto"
+    />
     <ListaProyectos :proyectos="proyectos" />
   </div>
 </template>
@@ -24,8 +28,8 @@ export default {
   },
   methods: {
     agregarProyecto(proyecto) {
-      // ahora proyecto es un objeto { nombre, descripcion }
-      this.proyectos.push(proyecto);
+      // reasignamos para mantener reactividad
+      this.proyectos = [...this.proyectos, proyecto];
     },
   },
 };

@@ -1,48 +1,62 @@
 <template>
-  <section class="agregar">
-    <h2>Agregar Proyecto</h2>
-    <input
-      v-model="nuevoProyecto"
-      placeholder="Nombre del nuevo proyecto"
+  <section>
+    <h2>Proyectos (desde Servicio)</h2>
+
+    <ListaProyectos
+      listName="Listado Proyectos desde Servicio"
+      :proyectos="service.proyectos"
+      @removeProyecto="onRemoveProyecto"
     />
-    <input
-      v-model="descripcionProyecto"
-      placeholder="Descripción del proyecto"
+
+    <AgregarProyecto
+      @newProyecto="onAddProyecto"
+      @removeProyecto="onRemoveProyecto"
     />
-    <button @click="emitirProyecto">Agregar</button>
   </section>
 </template>
 
 <script>
+import ListaProyectos from "./proyectos/ListaProyectos.vue"
+import AgregarProyecto from "./proyectos/AgregarProyecto.vue"
+import { ProyectoService as service } from "./Services/ProyectoService.js"
+
 export default {
-  name: "AgregarProyecto",
+  name: "ProyectosDosPage",
+
+  components: {
+    ListaProyectos,
+    AgregarProyecto
+  },
+
   data() {
     return {
-      nuevoProyecto: "",
-      descripcionProyecto: "",
-    };
+      service
+    }
   },
+
   methods: {
-    emitirProyecto() {
-      if (this.nuevoProyecto.trim() !== "" && this.descripcionProyecto.trim() !== "") {
-        // Emitimos un objeto con nombre y descripción
-        this.$emit("agregar", {
-          nombre: this.nuevoProyecto,
-          descripcion: this.descripcionProyecto,
-        });
-        this.nuevoProyecto = "";
-        this.descripcionProyecto = "";
+    onAddProyecto(newProyecto) {
+      if (newProyecto) {
+        this.service.addProyecto(newProyecto)
       }
     },
-  },
-};
+
+    onRemoveProyecto(id) {
+      if (id === null) {
+        if (this.service.proyectos.length > 0) {
+          const last = this.service.proyectos[this.service.proyectos.length - 1]
+          this.service.deleteProyecto(last.id)
+        }
+      } else {
+        this.service.deleteProyecto(id)
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
-.agregar {
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+section {
+  padding: 12px;
 }
 </style>

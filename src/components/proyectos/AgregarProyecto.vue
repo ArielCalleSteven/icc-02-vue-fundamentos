@@ -1,55 +1,63 @@
 <template>
-  <section class="agregar">
-    <h2>Agregar Proyecto</h2>
+  <div class="agregar-proyecto">
+    <h3>Agregar proyecto</h3>
+    <div>
+      <input v-model="nombre" placeholder="Nombre" />
+    </div>
+    <div>
+      <input v-model="descripcion" placeholder="Descripción" />
+    </div>
 
-    <input
-      v-model="nuevoProyecto"
-      placeholder="Nombre del nuevo proyecto"
-    />
-    <input
-      v-model="descripcionProyecto"
-      placeholder="Descripción del proyecto"
-    />
-
-    <button @click="emitirProyecto">Agregar</button>
-  </section>
+    <div style="margin-top:8px;">
+      <button @click="emitAgregar">Agregar</button>
+      <button v-if="allowRemove" @click="emitBorrarUltimo">Borrar último</button>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: "AgregarProyecto",
+
   data() {
     return {
-      nuevoProyecto: "",
-      descripcionProyecto: "",
-    };
+      nombre: "",
+      descripcion: "",
+      allowRemove: true
+    }
   },
+
   methods: {
-    emitirProyecto() {
-      if (this.nuevoProyecto.trim() !== "") {
-        // emitimos un objeto con nombre y descripción
-        this.$emit("agregar", {
-          nombre: this.nuevoProyecto,
-          descripcion: this.descripcionProyecto,
-        });
-        this.nuevoProyecto = "";
-        this.descripcionProyecto = "";
+    emitAgregar() {
+      if (!this.nombre.trim()) {
+        alert("Ingrese nombre")
+        return
       }
+
+      this.$emit("newProyecto", {
+        id: Date.now(),
+        nombre: this.nombre,
+        descripcion: this.descripcion
+      })
+
+      this.nombre = ""
+      this.descripcion = ""
     },
-  },
-};
+
+    emitBorrarUltimo() {
+      this.$emit("removeProyecto", null)
+    }
+  }
+}
 </script>
 
 <style scoped>
-.agregar {
-  margin: 20px 0;
-}
-input {
-  margin: 5px;
+.agregar-proyecto input {
   padding: 6px;
+  margin-bottom: 6px;
+  width: 100%;
 }
 button {
-  padding: 6px 12px;
-  cursor: pointer;
+  margin-right: 6px;
 }
 </style>
