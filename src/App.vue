@@ -1,18 +1,49 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <PerfilPage msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <NavBar @cambiar="pagina = $event" />
+    <component :is="paginaActual" />
+  </div>
 </template>
 
 <script>
-import PerfilPage from './components/PerfilPage.vue';
-//import HomePage from './components/HomePage.vue'
+import NavBar from './components/NavBar.vue'
+import HomePage from './components/HomePage.vue'
+import PerfilPage from './components/PerfilPage.vue'
+import ProyectosPage from './components/ProyectosPage.vue'
+import ProyectosDosPage from './components/ProyectosDosPage.vue'
 
+// 🔥 AÑADIDO — tu componente renombrado
+import FormulariosPage from './components/Formularios/FormulariosPage.vue'
 
 export default {
   name: 'App',
-  components: {
-    PerfilPage
 
+  components: {
+    NavBar,
+    HomePage,
+    PerfilPage,
+    ProyectosPage,
+    ProyectosDosPage,
+    FormulariosPage, // 🔥
+  },
+
+  data() {
+    return {
+      pagina: 'home'
+    }
+  },
+
+  computed: {
+    paginaActual() {
+      if (this.pagina === 'perfil') return 'PerfilPage'
+      if (this.pagina === 'proyectos') return 'ProyectosPage'
+      if (this.pagina === 'proyectos2') return 'ProyectosDosPage'
+
+      // 🔥 NUEVA RUTA
+      if (this.pagina === 'formularios') return 'FormulariosPage'
+
+      return 'HomePage'
+    }
   }
 }
 </script>
@@ -20,10 +51,7 @@ export default {
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
